@@ -39,6 +39,7 @@ app.route('/application/:appid')
 
 });
 
-app.listen(3000, function () {
-	console.log('Example app listening on port 3000!');
+var PORT = process.env.PORT || 5000;
+app.listen(PORT, function () {
+	console.log('Example app listening on port '+PORT);
     });
