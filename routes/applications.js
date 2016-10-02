@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-/*
+
 var valid_apps = [{
 	"name" : "Open Office Writer",
 	"id"	: "openoffice",
@@ -10,9 +10,9 @@ var valid_apps = [{
 var isInsideOtakari = function(lat, lng){
 	return true;
 };
-*/
-router.get('/hola', function (req, res){
-/*	var lat = req.query.lat;
+
+router.get('/', function (req, res){
+	var lat = req.query.lat;
 	var lng = req.query.lng;
 	var isInside = false;
 	if(lat && lng){
@@ -21,8 +21,7 @@ router.get('/hola', function (req, res){
 
 	//TODO: order app list
 
-	req.send(valid_apps);*/
-	res.send("hola");
+	res.send(valid_apps);
 });
 
 
