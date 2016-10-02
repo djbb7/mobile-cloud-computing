@@ -1,18 +1,19 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-
+var logger = require('morgan');
 
 var users = require('./routes/users');
-var appManager = require('./routes/applications');
+var applications = require('./routes/applications');
 
 var app = express();
 
+app.use(logger('dev'));
 app.use(bodyParser.json()); // for parsing application/json message body
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
 app.use('/users', users);
-app.use('/application', appManager);
+app.use('/application', applications);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
