@@ -44,7 +44,7 @@ router.get('/', function (req, res){
 });
 
 
-router.route('/application/:appid')
+router.route('/:appid')
 .get(function(req, res){
 	res.send('App: '+req.params.appid);
 })
