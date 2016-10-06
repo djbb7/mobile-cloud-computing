@@ -3,11 +3,33 @@ var router = express.Router();
 
 var redis = require('../redis-connect');
 
-var valid_apps = [{
-	"name" : "Open Office Writer",
-	"id"	: "openoffice",
-	"icon_url" : "http://somethingsomething.com"
-}];
+var valid_apps = [
+	{
+		"name" : "Open Office Writer",
+		"id"	: "openoffice",
+		"icon_url" : "http://somethingsomething.com",
+		"description" : "User-friendly text processor for creating documents."
+	},
+	{
+		"name" : "Inkscape",
+		"id"	: "inkscape",
+		"icon_url" : "http://somethingsomething.com",
+		"description" : "Vector drawing made easy."
+	},
+	{
+		"name" : "Tor Browser",
+		"id"	: "tor",
+		"icon_url" : "http://somethingsomething.com",
+		"description" : "Browser the web without trace."
+	},
+	{
+		"name" : "Tetris",
+		"id"	: "tetris",
+		"icon_url" : "http://somethingsomething.com",
+		"description" : "Play the classic blocks game"
+	}
+	
+];
 
 var isInsideOtakari = function(lat, lng){
 	return true;
@@ -46,10 +68,20 @@ router.get('/', function (req, res){
 
 router.route('/:appid')
 .get(function(req, res){
-	res.send('App: '+req.params.appid);
+
+	//TODO: store in redis that VM is running
+	//TODO: plug in VM command
+
+	var response = {
+		"vm_url" : "https://somedummyurl.com"
+	}
+	res.status(200).send(response);
 })
 .delete(function(req, res){
+	//TODO: check in redis if VM is running
+	//TODO: plug in VM command
 
+	res.status(202).send();
 });
 
 module.exports = router;
