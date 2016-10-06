@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var redis = require('../redis-connect');
+var geofencing = require('../geofencing');
 
 var valid_apps = [
 	{
@@ -31,8 +32,8 @@ var valid_apps = [
 	
 ];
 
-var isInsideOtakari = function(lat, lng){
-	return true;
+var isInsideTBuilding = function(lat, lng){
+	return geofencing.t_building.isInside(new geofencing.Point(lat, lng));
 };
 
 router.use(function checkToken(req, res, next){
@@ -57,12 +58,31 @@ router.get('/', function (req, res){
 	var lng = req.query.lng;
 	var isInside = false;
 	if(lat && lng){
-		isInside = isInsideOtakari(lat, lng);
-	} 
+		isInside = isInsideTBuilding(lat, lng);
+	}
 
-	//TODO: order app list
+	if(isInside)
+		console.log("User is inside T-building");
 
-	res.send(valid_apps);
+	sorted_apps = valid_apps.sort(function(a, b){
+		var aId = a['id'];
+		var bId = b['id'];
+		var aName = a['name'];
+		var bName = b['name'];
+
+		// If user is inside T-building, handle openoffice as a special case
+		if(isInside){
+			if(aId == 'openoffice')
+				return -1;
+			else if(bId == 'openoffice')
+				return 1;
+		}
+
+		// Sort rest by name
+		return aName < bName ? -1 : (aName > bName ? 1 : 0);
+	});
+
+	res.send(sorted_apps);
 });
 
 
