@@ -1,17 +1,19 @@
 var express = require('express');
 var router = express.Router();
-
+var crypto = require('crypto');
 
 var redis = require('../redis-connect');
-
-
 
 var valid_user = {
 	"username" : "peterpan",
 	"password" : "dreamisover"
 };
 
-//TODO: check if user is already logged in
+
+function randomToken () {
+    return crypto.randomBytes(24).toString('hex');
+}
+
 router.post('/login', function (req, res, next) {
 	if(!req.body.username || !req.body.password
 		|| req.body.username != valid_user.username
@@ -22,7 +24,8 @@ router.post('/login', function (req, res, next) {
 	}
 }, function (req, res){
 	//generate token
-	var token = '3434dd34434.12312esdsdsd'; 
+	console.log("Generating token");
+	var token = randomToken();
 
 	//save token in db
 	redis.client.set("token:"+token, token, function(error, result) {
