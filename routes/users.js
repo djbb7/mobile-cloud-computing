@@ -2,19 +2,9 @@ var express = require('express');
 var router = express.Router();
 
 
-var redis   = require("redis");
+var redis = require('../redis-connect');
 
-if (process.env.REDIS_PORT && process.env.REDIS_HOST && process.env.REDIS_PASSWORD) {
-	var client  = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
-	client.auth(process.env.REDIS_PASSWORD);
-	console.log('Connecting to remote instance...');
-} else {
-	client = redis.createClient();
-}
 
-client.on('connect', function() {
-    console.log('Connected to redis instance');
-});
 
 var valid_user = {
 	"username" : "peterpan",
@@ -35,7 +25,7 @@ router.post('/login', function (req, res, next) {
 	var token = '3434dd34434.12312esdsdsd'; 
 
 	//save token in db
-	client.set("token:"+token, token, function(error, result) {
+	redis.client.set("token:"+token, token, function(error, result) {
 	    if (error) res.status(500).send('Error: ' + error);
 	    else res.send(token);
 	});
@@ -48,7 +38,7 @@ router.post('/logout',
 			res.status(401).send();
 			console.log("Authorization token not passed.")
 		} else {
-			client.exists("token:"+req.get("Authorization"), function(error, result){
+			redis.client.exists("token:"+req.get("Authorization"), function(error, result){
 				if(result == 0) {
 					res.status(401).send();
 					console.log("Token doesn't exist.")
@@ -63,7 +53,7 @@ router.post('/logout',
 		var token = req.get("Authorization");
 		console.log(token);
 
-		client.del("token:"+token, function(error, result){
+		redis.client.del("token:"+token, function(error, result){
 			if(error) res.status(500).send('Error: ' + error);
 			else res.status(200).send();		
 	});
