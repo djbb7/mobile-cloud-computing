@@ -51,9 +51,6 @@ class Polygon
 			this.bottomRight.lat = Math.min(this.bottomRight.lat, p.lat);
 			this.bottomRight.lon = Math.max(this.bottomRight.lon, p.lon);
 		}
-
-		console.log(this.topLeft.lat + " " + this.topLeft.lon);
-		console.log(this.bottomRight.lat + " " + this.bottomRight.lon);
 	}
 
 	/*
@@ -63,7 +60,6 @@ class Polygon
 	 */
 	windingNumber(point)
 	{
-		console.log("Calculating winding number");
 		var wn = 0;
 		for(var i = 0; i < this.points.length; ++i)
 		{
@@ -81,7 +77,6 @@ class Polygon
 					wn--;
 			}
 		}
-		console.log("Done");
 
 		return wn;
 	}
@@ -94,11 +89,9 @@ class Polygon
 	 */
 	isInside(point)
 	{
-		console.log("Checking");
 		// Check against bounding box to avoid more expensive check
 		if(point.lon < this.topLeft.lon || point.lon > this.bottomRight.lon || point.lat > this.topLeft.lat || point.lat < this.bottomRight.lat)
 		{
-			console.log("Point not inside AABB")
 			return false;
 		}
 
@@ -111,28 +104,28 @@ var t_building = new Polygon([
 	new Point(60.18696, 24.82048),
 	new Point(60.18729, 24.82060),
 	new Point(60.18729, 24.82058),
-	new Point(60.18735, 24.82062),
+	new Point(60.18736, 24.82062),
 	new Point(60.18730, 24.82100),
 	new Point(60.18723, 24.82095),
 	new Point(60.18712, 24.82167),
-	new Point(60.18698, 24.82255),
-	new Point(60.18657, 24.82229),
+	new Point(60.18698, 24.82254),
+	new Point(60.18657, 24.82228),
 	new Point(60.18669, 24.82180),
-	new Point(60.18683, 24.82032),
+	new Point(60.18683, 24.82031),
 	new Point(60.18688, 24.82032),
 	new Point(60.18687, 24.82036),
 	new Point(60.18689, 24.82036),
-	new Point(60.18697, 24.82036),
 	new Point(60.18689, 24.82034),
+	new Point(60.18697, 24.82036),
 ])
 
-/*console.log(p.isInside(new Point(50.187290, 20.0250000))); // out
-console.log(p.isInside(new Point(60.186788, 24.8213108))); // in
-console.log(p.isInside(new Point(60.186965, 24.8208829))); // in
-console.log(p.isInside(new Point(60.187236, 24.820980))); // out
-console.log(p.isInside(new Point(60.187293, 24.820591))); // in
-console.log(p.isInside(new Point(60.187284, 24.820589))); // out
-console.log(p.isInside(new Point(60.186882, 24.820354))); // out*/
+/*console.log(t_building.isInside(new Point(50.187290, 20.0250000))); // out
+console.log(t_building.isInside(new Point(60.186788, 24.8213108))); // in
+console.log(t_building.isInside(new Point(60.186965, 24.8208829))); // in
+console.log(t_building.isInside(new Point(60.187236, 24.820980))); // out
+console.log(t_building.isInside(new Point(60.187293, 24.820591))); // in
+console.log(t_building.isInside(new Point(60.187284, 24.820589))); // out
+console.log(t_building.isInside(new Point(60.186882, 24.820354))); // out*/
 
 exports.t_building = t_building;
 exports.Point = Point;
