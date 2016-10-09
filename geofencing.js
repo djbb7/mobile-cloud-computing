@@ -107,7 +107,7 @@ class Polygon
 	}
 }
 
-t_building = new Polygon([
+var t_building = new Polygon([
 	new Point(60.18696, 24.82048),
 	new Point(60.18729, 24.82060),
 	new Point(60.18729, 24.82058),

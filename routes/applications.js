@@ -64,6 +64,7 @@ router.get('/', function (req, res){
 	if(isInside)
 		console.log("User is inside T-building");
 
+	
 	sorted_apps = valid_apps.sort(function(a, b){
 		var aId = a['id'];
 		var bId = b['id'];
@@ -81,7 +82,9 @@ router.get('/', function (req, res){
 		// Sort rest by name
 		return aName < bName ? -1 : (aName > bName ? 1 : 0);
 	});
+	
 
+	var sorted_apps = valid_apps;
 	res.send(sorted_apps);
 });
 
