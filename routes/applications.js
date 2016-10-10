@@ -4,29 +4,31 @@ var router = express.Router();
 var redis = require('../redis-connect');
 var geofencing = require('../geofencing');
 
+
+
 var valid_apps = [
 	{
 		"name" : "Open Office Writer",
 		"id"	: "openoffice",
-		"icon_url" : "http://somethingsomething.com",
+		"icon_url" : "%host%/static/openofficewriter.png",
 		"description" : "User-friendly text processor for creating documents."
 	},
 	{
 		"name" : "Inkscape",
 		"id"	: "inkscape",
-		"icon_url" : "http://somethingsomething.com",
+		"icon_url" : "%host%/static/inkscape.png",
 		"description" : "Vector drawing made easy."
 	},
 	{
 		"name" : "Tor Browser",
 		"id"	: "tor",
-		"icon_url" : "http://somethingsomething.com",
+		"icon_url" : "%host%/static/torbrowser.png",
 		"description" : "Browser the web without trace."
 	},
 	{
 		"name" : "Tetris",
 		"id"	: "tetris",
-		"icon_url" : "http://somethingsomething.com",
+		"icon_url" : "%host%/static/tetris.png",
 		"description" : "Play the classic blocks game"
 	}
 	
@@ -85,7 +87,11 @@ router.get('/', function (req, res){
 	
 
 	var sorted_apps = valid_apps;
-	res.send(sorted_apps);
+	var baseUrl = req.protocol + '://' + req.get('host');
+	res.send(sorted_apps.map(function(curr, i, arr){
+		curr.icon_url = curr.icon_url.replace("%host%", baseUrl);
+		return curr;
+	}));
 });
 
 
