@@ -126,7 +126,7 @@ router.route('/:appid')
 					res.status(500).send();
 				}
 			});
-		} else if (resp.status == "STAGING"){
+		} else if (resp.status == "STAGING" || resp.status == "PROVISIONING"){
 			//virtual machine is not ready yet
 			res.status(202).send();
 		} else if (resp.status == "RUNNING"){
