@@ -44,9 +44,7 @@ router.post('/logout',
 			redis.client.exists("token:"+req.get("Authorization"), function(error, result){
 				if(result == 0) {
 					res.status(401).send();
-					console.log("Token doesn't exist.")
 				} else {
-					console.log("Token found.")
 					next();
 				}
 			});

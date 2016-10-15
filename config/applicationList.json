@@ -1,0 +1,6 @@
+{
+"openoffice" : "instance-openoffice",
+"inkscape"   : "instance-inkscape",
+"solitaire"   : "instance-solitaire",
+"tor"   : "instance-torbrowser"
+}

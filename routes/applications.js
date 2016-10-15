@@ -3,7 +3,7 @@ var router = express.Router();
 
 var redis = require('../redis-connect');
 var geofencing = require('../geofencing');
-
+var gcloud = require('../gcloud');
 
 
 var valid_apps = [
@@ -26,16 +26,27 @@ var valid_apps = [
 		"description" : "Browser the web without trace."
 	},
 	{
-		"name" : "Tetris",
-		"id"	: "tetris",
-		"icon_url" : "%host%/static/tetris.png",
-		"description" : "Play the classic blocks game"
+		"name" : "Solitaire",
+		"id"	: "solitaire",
+		"icon_url" : "%host%/static/solitaire.png",
+		"description" : "Play the classic lonely cards game."
 	}
 	
 ];
 
 var isInsideTBuilding = function(lat, lng){
 	return geofencing.t_building.isInside(new geofencing.Point(lat, lng));
+};
+
+var isValidApp = function(appid){
+	var match = false;
+	for (var i=0; i<valid_apps.length; i++){
+		if(valid_apps[i].id == appid){
+			match = true;
+			break;
+		}
+	}
+	return match;
 };
 
 router.use(function checkToken(req, res, next){
@@ -95,22 +106,55 @@ router.get('/', function (req, res){
 });
 
 
+
 router.route('/:appid')
-.get(function(req, res){
-
-	//TODO: store in redis that VM is running
-	//TODO: plug in VM command
-
-	var response = {
-		"vm_url" : "https://somedummyurl.com"
+.all(function(req, res, next){
+	if(isValidApp(req.params.appid)){
+		next();
+	} else {
+		res.status(404).send();
 	}
-	res.status(200).send(response);
+})
+.get(function(req, res){
+	gcloud.getInfo(req.params.appid, function(resp){
+		if(resp.status == "TERMINATED"){
+			//start machine
+			gcloud.startApp(req.params.appid, function(gResp){
+				if(gResp.status == "PENDING"){
+					res.status(202).send();
+				} else {
+					res.status(500).send();
+				}
+			});
+		} else if (resp.status == "STAGING"){
+			//virtual machine is not ready yet
+			res.status(202).send();
+		} else if (resp.status == "RUNNING"){
+			//virtual machine is up and running :)
+			var response = {
+				"vm_url" : resp.ip_address + ":5901"
+			}
+			res.status(200).send(response);
+		} else {
+			//problem between us and google
+			res.status(500).send();
+		}
+	});
 })
 .delete(function(req, res){
-	//TODO: check in redis if VM is running
-	//TODO: plug in VM command
-
-	res.status(202).send();
+	gcloud.getInfo(req.params.appid, function(resp){
+		if(resp.status == "TERMINATED"){
+			res.status(404).send();
+		} else if (resp.status == "STAGING" || resp.status == "RUNNING" || resp.status == "STOPPING"){
+			gcloud.terminateApp(req.params.appid, function(gResp){
+				console.log(gResp.status);
+				res.status(202).send();
+			})
+		} else {
+			//problem between us and google
+			res.status(500).send();
+		}
+	});
 });
 
 module.exports = router;
