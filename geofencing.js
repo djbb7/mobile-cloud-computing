@@ -1,3 +1,5 @@
+'use strict';
+
 /** Class representing a 2D point. */
 class Point
 {
