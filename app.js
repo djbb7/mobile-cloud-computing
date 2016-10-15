@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
+var cors = require('cors');
 
 var users = require('./routes/users');
 var applications = require('./routes/applications');
@@ -10,6 +11,7 @@ var app = express();
 app.use(logger('dev'));
 app.use(bodyParser.json()); // for parsing application/json message body
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors());
 
 app.use('/static', express.static('public')); //logos of files
 app.use('/users', users); //session handling
