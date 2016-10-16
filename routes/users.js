@@ -29,8 +29,14 @@ router.post('/login', function (req, res, next) {
 
 	//save token in db
 	redis.client.set("token:"+token, token, function(error, result) {
-	    if (error) res.status(500).send('Error: ' + error);
-	    else res.send(token);
+		if (error)
+			res.status(500).send({
+				error: error,
+			});
+		else
+			res.send({
+				token: token,
+			});
 	});
 });
 
