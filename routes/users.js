@@ -17,8 +17,6 @@ function randomToken () {
 function isValidUser(username, password){
 	var shasum = crypto.createHash('sha1');
 	var checksum = shasum.update(valid_user.password).digest('hex');
-	console.log(password);
-	console.log(checksum);
 	return username == valid_user.username
 		&& password == checksum;
 }
