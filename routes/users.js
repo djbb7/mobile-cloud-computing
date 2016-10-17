@@ -14,10 +14,16 @@ function randomToken () {
     return crypto.randomBytes(24).toString('hex');
 }
 
+function isValidUser(username, password){
+	var shasum = crypto.createHash('sha1');
+	var checksum = new String(shasum.update(valid_user.password).digest('hex'));
+	return username == valid_user.username
+		&& password == checksum;
+}
+
 router.post('/login', function (req, res, next) {
 	if(!req.body.username || !req.body.password
-		|| req.body.username != valid_user.username
-		|| req.body.password != valid_user.password){
+		|| !isValidUser(req.body.username, req.body.password)){
 		res.status(401).send();
 	} else {
 		return next();
