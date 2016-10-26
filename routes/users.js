@@ -30,7 +30,6 @@ router.post('/login', function (req, res, next) {
 	}
 }, function (req, res){
 	//generate token
-	console.log("Generating token");
 	var token = randomToken();
 
 	//save token in db
@@ -51,7 +50,6 @@ router.post('/logout',
 	function(req, res, next){
 		if ( !req.get("Authorization") ){
 			res.status(401).send();
-			console.log("Authorization token not passed.")
 		} else {
 			redis.client.exists("token:"+req.get("Authorization"), function(error, result){
 				if(result == 0) {
@@ -64,7 +62,6 @@ router.post('/logout',
 	},
 	function (req, res){
 		var token = req.get("Authorization");
-		console.log(token);
 
 		redis.client.del("token:"+token, function(error, result){
 			if(error) res.status(500).send('Error: ' + error);
